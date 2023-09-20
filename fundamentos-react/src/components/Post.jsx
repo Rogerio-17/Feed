@@ -6,6 +6,7 @@ import styles from "./Post.module.css";
 
 
 export function Post({author, content, publishedAt}) {
+  // Biblioteca para formatar datas de forma muito simples date-fns
   const publishedDateFormat = format(publishedAt, "d 'de' LLLL 'ás' HH:mm'h'", {
     locale: ptBr
   })
