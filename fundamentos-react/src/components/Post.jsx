@@ -3,9 +3,12 @@ import ptBr from "date-fns/locale/pt-BR"
 import { Comment } from "./Comment";
 import { Avatar } from "./Avatar";
 import styles from "./Post.module.css";
+import { useState } from 'react';
 
 
 export function Post({author, content, publishedAt}) {
+  const [comments, setComments] = useState(["Muito bom Devon, parabéns!! 👏👏"])
+  const [newCommentText, setNewCommentText] = useState('')
   // Biblioteca para formatar datas de forma muito simples date-fns
   const publishedDateFormat = format(publishedAt, "d 'de' LLLL 'ás' HH:mm'h'", {
     locale: ptBr
@@ -16,9 +19,18 @@ export function Post({author, content, publishedAt}) {
     addSuffix: true,
   })
 
+  function handleCreateNewComment() {
+    event.preventDefault()
+    setComments([...comments, newCommentText])
+    setNewCommentText('')
+  }
+
+  function handleNewCommentChange() {
+    setNewCommentText(event.target.value)
+  }
+
 
   return (
-
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
@@ -49,10 +61,15 @@ export function Post({author, content, publishedAt}) {
         })}
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu comentario</strong>
 
-        <textarea placeholder="Digite seu comentário"></textarea>
+        <textarea 
+        name="comment"
+        placeholder="Digite seu comentário"
+        value={newCommentText}
+        onChange={handleNewCommentChange}
+        ></textarea>
 
         <footer>
           <button type="submit">Publicar</button>
@@ -60,8 +77,13 @@ export function Post({author, content, publishedAt}) {
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
+        {comments.map((comment) => {
+          return(
+            <Comment
+            content={comment}
+            />
+          )
+        })}
       </div>
     </article>
   );
